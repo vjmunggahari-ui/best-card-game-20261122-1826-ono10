@@ -12,6 +12,7 @@ export function createGame(seed) {
     seed, rng, turn: 1, phase: 'title', // title | play | foe | won | lost
     you: makeFighter(), foe: makeFighter(),
     lastSuit: null, combo: 0, log: [], lastPlay: '', intent: null, muted: false,
+    played: [], // display-only record of this turn's played cards: { who: 'you'|'foe', id }
   };
   game.you.deck = shuffle(deckList(), rng);
   game.foe.deck = shuffle(deckList(), rng);
@@ -67,6 +68,7 @@ export function applyCard(game, who, cardId) {
   game.lastSuit = def.suit;
   game.lastPlay = text;
   game.log.push(text);
+  game.played.push({ who, id: cardId }); // display only; the row renders this turn's cards
   if (game.log.length > 3) game.log.shift();
   if (target.life <= 0) game.phase = who === 'you' ? 'won' : 'lost';
   return { ok: true, text, bonus };
@@ -76,7 +78,7 @@ export function startTurn(game) {
   game.turn += 1;
   game.you.maxEnergy = Math.min(MAX_ENERGY, game.you.maxEnergy + 1);
   game.you.energy = game.you.maxEnergy;
-  game.lastSuit = null; game.combo = 0;
+  game.lastSuit = null; game.combo = 0; game.played = [];
   drawUpTo(game.you, HAND_SIZE);
   game.phase = 'play';
 }

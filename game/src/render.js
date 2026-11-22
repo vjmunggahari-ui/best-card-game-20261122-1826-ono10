@@ -8,9 +8,13 @@ export function cardEl(def, opts = {}) {
   const suit = SUITS[def.suit];
   const el = document.createElement('div');
   el.className = `card suit-${def.suit}${opts.disabled ? ' disabled' : ''}${opts.played ? ' played' : ''}`;
-  el.tabIndex = 0;
-  el.setAttribute('role', 'button');
-  el.setAttribute('aria-label', `${def.name}, ${suit.name} suit, cost ${def.cost}, ${def.text}`);
+  if (!opts.static) { // played-row cards are display-only: not focusable, not buttons
+    el.tabIndex = 0;
+    el.setAttribute('role', 'button');
+    el.setAttribute('aria-label', `${def.name}, ${suit.name} suit, cost ${def.cost}, ${def.text}`);
+  } else {
+    el.setAttribute('aria-label', `${def.name}, ${suit.name} suit, played this turn`);
+  }
   el.innerHTML = `<div class="cost">${def.cost}</div><div class="suit">${suit.glyph}</div>` +
     `<div class="cname">${def.name}</div><div class="cvalue">${def.value}</div>` +
     `<div class="ctext">${def.text}</div><div class="suitname">${suit.name}</div>`;
@@ -40,6 +44,26 @@ export function render(game, handlers) {
   $('energy').firstChild.textContent = `Energy ${game.you.energy}/${game.you.maxEnergy} `;
   $('lastPlay').textContent = game.lastPlay || 'Play a card — matching suits chain into combos.';
   $('log').textContent = game.log.join(' · ');
+  const playedRow = $('playedRow');
+  playedRow.innerHTML = '';
+  const played = game.played.slice(-5);
+  if (played.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'played-empty';
+    empty.textContent = 'No cards on the table yet — play a card to start the chain.';
+    playedRow.appendChild(empty);
+  } else {
+    played.forEach((p) => {
+      const slot = document.createElement('div');
+      slot.className = 'played-slot';
+      const who = document.createElement('div');
+      who.className = 'played-who';
+      who.textContent = p.who === 'you' ? 'You played' : 'Warden played';
+      slot.appendChild(who);
+      slot.appendChild(cardEl(cardDef(p.id), { played: true, static: true }));
+      playedRow.appendChild(slot);
+    });
+  }
   const banner = $('comboBanner');
   if (game.combo > 0) { banner.textContent = `COMBO x${game.combo + 1}! +2`; banner.classList.remove('hidden'); }
   else banner.classList.add('hidden');

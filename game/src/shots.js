@@ -17,10 +17,15 @@ export function setupShot(game, shot) {
     game.you.life = 22; game.foe.life = 19;
     game.you.shield = 3; game.turn = 4;
     game.you.energy = 5; game.you.maxEnergy = 5;
-    game.you.hand = ['ember-blaze', 'tide-surge', 'stone-wall', 'thorn-bloom', 'ember-spark'];
+    game.you.hand = ['ember-blaze', 'tide-wave', 'stone-bastion', 'thorn-bloom', 'ember-inferno'];
     game.foe.hand = ['ember-blaze', 'tide-surge', 'stone-wall', 'thorn-bloom'];
     game.lastPlay = 'Tide Surge hits for 4 and draws a card.';
     game.log = ['Ember Spark hits for 3', 'Stone Wall raises 6 shield', 'Tide Surge hits for 4 · draw 1'];
+    game.played = [
+      { who: 'you', id: 'ember-spark' },
+      { who: 'you', id: 'stone-wall' },
+      { who: 'you', id: 'tide-surge' },
+    ];
     game.intent = chooseIntent(game);
     game.phase = 'play';
     return 'play';

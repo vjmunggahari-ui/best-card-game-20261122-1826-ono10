@@ -24,6 +24,12 @@ body { font-family: Georgia, 'Times New Roman', serif; color: #f3e9c8; }
 .hand { display: flex; gap: 10px; min-height: 168px; align-items: center; justify-content: center; padding: 6px 0; }
 #foeArea, #playerArea { flex: 0 0 auto; }
 #midfield { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+#playedRow { display: flex; gap: 12px; min-height: 179px; align-items: center; justify-content: center; }
+.played-slot { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.played-who { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #ffd76a; }
+.played-empty { font-size: 14px; font-style: italic; color: #8fb89a; }
+#playedRow .card { cursor: default; }
+#playedRow .card:hover, #playedRow .card:focus { transform: none; box-shadow: 0 4px 10px rgba(0,0,0,.55); outline: none; }
 #lastPlay { font-size: 16px; color: #e8f5e9; min-height: 22px; }
 #log { font-size: 13px; color: #b9d8c0; max-width: 760px; text-align: center; min-height: 18px; }
 .combo { font-size: 30px; font-weight: bold; color: #ffd76a; letter-spacing: 3px;
