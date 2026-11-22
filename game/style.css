@@ -1,0 +1,73 @@
+/* Ember Sigil Duel — felt table, big readable cards, suit colour AND shape. */
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #0d1f16; }
+body { font-family: Georgia, 'Times New Roman', serif; color: #f3e9c8; }
+#table { height: 100vh; display: flex; flex-direction: column; padding: 10px 18px;
+  background: radial-gradient(ellipse at 50% 30%, #1d5c38 0%, #123d24 55%, #0a2415 100%); }
+#topbar { display: flex; align-items: center; gap: 16px; }
+#gametitle { font-size: 26px; letter-spacing: 4px; color: #ffd76a; font-weight: bold; text-shadow: 0 2px 0 #5c3a00; }
+#turnline { font-size: 15px; color: #cfe8d4; }
+#muteBtn { margin-left: auto; background: #234d33; color: #f3e9c8; border: 1px solid #ffd76a; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.fighter { display: flex; align-items: center; gap: 14px; }
+.fighter-name { font-size: 18px; font-weight: bold; letter-spacing: 1px; min-width: 190px; }
+.tag { font-size: 11px; color: #9fc7ab; letter-spacing: 2px; text-transform: uppercase; }
+.lifebar { position: relative; width: 260px; height: 22px; background: #08130c; border: 2px solid #ffd76a; border-radius: 11px; overflow: hidden; }
+.lifefill { height: 100%; transition: width .45s ease; }
+.lifefill.you { background: linear-gradient(90deg, #2ecc71, #7be495); }
+.lifefill.foe { background: linear-gradient(90deg, #e5484d, #ff8a7a); }
+.lifebar span { position: absolute; inset: 0; text-align: center; font-size: 14px; font-weight: bold; line-height: 20px; color: #fff; text-shadow: 0 1px 2px #000; }
+.shieldline { font-size: 15px; color: #9fd8ff; min-width: 90px; }
+.intent { margin-left: auto; background: #3a2a10; border: 1px dashed #ffd76a; border-radius: 8px; padding: 6px 12px; font-size: 15px; color: #ffd76a; }
+#energy { font-size: 17px; color: #ffd76a; }
+#energy .pip { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #ffd76a; margin: 0 2px; box-shadow: 0 0 6px #ffd76a; }
+#energy .pip.spent { background: #4a3f22; box-shadow: none; }
+.hand { display: flex; gap: 10px; min-height: 168px; align-items: center; justify-content: center; padding: 6px 0; }
+#foeArea, #playerArea { flex: 0 0 auto; }
+#midfield { flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+#lastPlay { font-size: 16px; color: #e8f5e9; min-height: 22px; }
+#log { font-size: 13px; color: #b9d8c0; max-width: 760px; text-align: center; min-height: 18px; }
+.combo { font-size: 30px; font-weight: bold; color: #ffd76a; letter-spacing: 3px;
+  text-shadow: 0 0 18px #ff9d00, 0 2px 0 #5c3a00; animation: pop .35s ease; }
+.combo.hidden { display: none; }
+@keyframes pop { 0% { transform: scale(.4); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.card { width: 112px; height: 158px; border-radius: 10px; padding: 8px; cursor: pointer; position: relative;
+  background: linear-gradient(160deg, #fff8e1, #f0dfae); color: #1c1c1c; border: 3px solid #8a6d1f;
+  box-shadow: 0 4px 10px rgba(0,0,0,.55); transition: transform .18s ease, box-shadow .18s ease; user-select: none; }
+.card:hover, .card:focus { transform: translateY(-14px) scale(1.05); box-shadow: 0 12px 22px rgba(0,0,0,.65); outline: 3px solid #ffd76a; }
+.card.played { animation: slide .3s ease; }
+@keyframes slide { 0% { transform: translateY(30px) rotate(-4deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
+.card .cost { position: absolute; top: 4px; left: 6px; width: 26px; height: 26px; border-radius: 50%;
+  background: #1d3a5f; color: #fff; font-weight: bold; text-align: center; line-height: 26px; font-size: 15px; }
+.card .suit { font-size: 34px; text-align: center; line-height: 1.1; margin-top: 12px; }
+.card .cname { font-size: 14px; font-weight: bold; text-align: center; margin-top: 2px; }
+.card .cvalue { font-size: 30px; font-weight: bold; text-align: center; }
+.card .ctext { font-size: 11.5px; text-align: center; color: #444; margin-top: 2px; line-height: 1.25; min-height: 15px; white-space: nowrap; }
+.card .suitname { position: absolute; bottom: 5px; left: 0; right: 0; text-align: center; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #666; }
+.card.suit-ember { border-color: #c0392b; } .card.suit-ember .suit { color: #c0392b; }
+.card.suit-tide { border-color: #2471c8; } .card.suit-tide .suit { color: #2471c8; }
+.card.suit-thorn { border-color: #1e8449; } .card.suit-thorn .suit { color: #1e8449; }
+.card.suit-stone { border-color: #b7791f; } .card.suit-stone .suit { color: #b7791f; }
+.card.disabled { opacity: .45; cursor: not-allowed; }
+.card.back { background: repeating-linear-gradient(45deg, #7a1f1f 0 10px, #5c1515 10px 20px); border-color: #ffd76a; cursor: default; }
+.card.back:hover { transform: none; box-shadow: 0 4px 10px rgba(0,0,0,.55); outline: none; }
+.card.back .suit { color: #ffd76a; font-size: 44px; margin-top: 44px; }
+#controls { display: flex; align-items: center; gap: 14px; justify-content: center; padding-bottom: 4px; }
+#controls button, #startBtn { background: #ffd76a; color: #3a2a00; border: none; border-radius: 8px;
+  padding: 10px 20px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: inherit; }
+#controls button:hover, #startBtn:hover { background: #ffe08a; }
+#hint { font-size: 13px; color: #b9d8c0; }
+.overlay { position: fixed; inset: 0; background: rgba(4, 18, 10, .82); display: flex; align-items: center; justify-content: center; z-index: 20; }
+.overlay.hidden { display: none; }
+.panel { background: linear-gradient(160deg, #fff8e1, #f0dfae); color: #1c1c1c; border: 4px solid #ffd76a; border-radius: 16px;
+  padding: 28px 40px; text-align: center; max-width: 560px; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+.panel h1 { margin: 0 0 8px; font-size: 38px; letter-spacing: 3px; color: #7a1f1f; }
+.panel p { font-size: 17px; margin: 6px 0; }
+#panelRules { text-align: left; font-size: 15px; margin: 12px 0 18px; }
+#panelRules p { margin: 4px 0; }
+.panel.win h1 { color: #1e8449; }
+.panel.lose h1 { color: #7a1f1f; }
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 15; overflow: hidden; }
+#confetti.hidden { display: none; }
+#confetti i { position: absolute; top: -12px; width: 10px; height: 16px; display: block; animation: fall 2.6s linear forwards; }
+@keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: .8; } }
+#status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

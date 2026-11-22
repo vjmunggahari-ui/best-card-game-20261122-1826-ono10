@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Sigil Duel — a card duel of suits and combos</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id="table">
+  <header id="topbar">
+    <div id="gametitle">EMBER SIGIL DUEL</div>
+    <div id="turnline">Turn 1 — your move</div>
+    <button id="muteBtn" type="button" title="Mute (M)">♪ on</button>
+  </header>
+
+  <section id="foeArea" aria-label="Opponent">
+    <div class="fighter" id="foeBox">
+      <div class="fighter-name">RUNE WARDEN <span class="tag">opponent</span></div>
+      <div class="lifebar"><div class="lifefill foe" id="foeLifeFill"></div><span id="foeLifeText"></span></div>
+      <div class="shieldline" id="foeShield"></div>
+      <div id="foeIntent" class="intent">Warden is thinking…</div>
+    </div>
+    <div id="foeHand" class="hand foe-hand" aria-label="Opponent hand"></div>
+  </section>
+
+  <section id="midfield">
+    <div id="comboBanner" class="combo hidden">COMBO!</div>
+    <div id="lastPlay">Play a card — matching suits chain into combos.</div>
+    <div id="log" aria-live="polite"></div>
+  </section>
+
+  <section id="playerArea" aria-label="Your hand">
+    <div class="fighter" id="youBox">
+      <div class="fighter-name">YOU <span class="tag">challenger</span></div>
+      <div class="lifebar"><div class="lifefill you" id="youLifeFill"></div><span id="youLifeText"></span></div>
+      <div class="shieldline" id="youShield"></div>
+      <div id="energy">Energy <span id="energyPips"></span></div>
+    </div>
+    <div id="youHand" class="hand you-hand" aria-label="Your hand"></div>
+    <div id="controls">
+      <button id="endTurnBtn" type="button">End turn (E)</button>
+      <button id="newGameBtn" type="button">New duel (N)</button>
+      <span id="hint">Keys: 1–5 play a card · E end turn · Enter start</span>
+    </div>
+  </section>
+
+  <div id="overlay" class="overlay">
+    <div class="panel" id="panel">
+      <h1 id="panelTitle">EMBER SIGIL DUEL</h1>
+      <p id="panelText">Four sigils. One table. Outwit the Rune Warden.</p>
+      <div id="panelRules">
+        <p>♥ Life 30 each. Energy grows every turn (3 → 8).</p>
+        <p>▲ Ember hits · ● Tide draws &amp; strikes · ◆ Thorn heals · ■ Stone shields.</p>
+        <p>Play two cards of the SAME suit in one turn to trigger a <b>COMBO +2</b>.</p>
+        <p>Read the Warden's intent banner, then counter it: shield against a strike, strike before a heal.</p>
+      </div>
+      <button id="startBtn" type="button">Begin the duel</button>
+    </div>
+  </div>
+  <div id="confetti" class="hidden" aria-hidden="true"></div>
+</div>
+<p id="status" role="status" aria-live="polite"></p>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
